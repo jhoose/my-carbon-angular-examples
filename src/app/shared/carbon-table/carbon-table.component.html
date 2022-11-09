@@ -1,0 +1,101 @@
+<ibm-table-container class="ibm-padding-bottom-r1 padding-top-none">
+
+    <ibm-table-header *ngIf="hasTableHeader || hasDateRange" class="left-right-align-table-header">
+        <div>
+            <h4 ibmTableHeaderTitle *ngIf="tableHeader.tableTitle">{{ tableHeader.tableTitle }}</h4>
+            <p ibmTableHeaderDescription *ngIf="tableHeader.tableDescription">
+                {{ tableHeader.tableDescription }}
+            </p>
+        </div>
+
+        <div *ngIf="hasDateRange">
+            <ibm-date-picker
+                [label]="dateRange.labels.from"
+                [rangeLabel]="dateRange.labels.to"
+                range="true"
+                [ngModel]="dateRange.model"
+                (ngModelChange)="updateDateRange($event)"
+            >
+            </ibm-date-picker>
+        </div>
+
+    </ibm-table-header>
+
+    <ibm-table-toolbar>       
+        <ibm-table-toolbar-content>
+
+            <ibm-table-toolbar-search
+                [tableSearch]="true"
+                [expandable]="false"
+                placeholder="Search"
+                title="Search Table"
+                [value]="searchValue"
+                (clear)="clearSearchBar()"
+                (valueChange)="searchValueChange($event)"  
+            >
+            </ibm-table-toolbar-search>
+
+            <button ibmButton="ghost" class="toolbar-action" title="Refresh Table" (click)="refreshTable()">
+                Refresh &nbsp;
+                <!-- <ibm-icon-renew size="16" class="bx--btn__icon"></ibm-icon-renew> -->
+            </button>
+
+            <!-- <button *ngIf="showAddButton" ibmButton="tertiary" class="toolbar-action" title="Add Record" (click)="onClickAddButton()">
+                Add
+                <ibm-icon-add size="16" class="bx--btn__icon"></ibm-icon-add>
+            </button> -->
+
+            <button *ngIf="showAddButton" ibmButton="tertiary" class="toolbar-action" [title]="addButton.toolTip" (click)="onClickAddButton()">
+                {{ addButton.text }}
+                <ibm-icon-add size="16" class="bx--btn__icon"></ibm-icon-add>
+            </button>
+
+            <button *ngIf="showExportButton" ibmButton="primary" title="Export Shipments" (click)="export()">
+                Export
+                &nbsp;
+                <svg ibmIconDocumentExport size="16" class="bx--btn__icon"></svg>
+            </button>
+
+        </ibm-table-toolbar-content>
+    </ibm-table-toolbar>
+
+    <div class="horizontal-table-scroll">
+
+        <ibm-table
+            [skeleton]="skeleton"
+            [model]="skeleton ? skeletonModel : carbonTableModel"
+            [showSelectionColumn]="false"
+            [size]="'sh'"
+            [striped]="true"
+            isDataGrid="false"
+            sortable="sortColumn"
+            (sort)="tableSort($event)"
+        >
+            <tbody>
+                <tr>
+                    <td [attr.colspan]="numberOfColumns">
+
+                        <div *ngIf="isLoading==true" class="no-data inline-loading-container">
+                            <ibm-inline-loading
+                                [state]="state"
+                                [loadingText]="loadingText"
+                                [successText]="successText"
+                                [errorText]="errorText"
+                            >
+                            </ibm-inline-loading>
+                        </div>
+
+                        <div *ngIf="isThereNoData==true && isLoading==false" class="no-data">
+                            No Data
+                        </div>
+
+                    </td>
+                </tr>
+            </tbody>
+        </ibm-table>
+
+    </div> <!-- End horizontal-table-scroll div -->
+
+    <ibm-pagination *ngIf="showPagination==true" [model]="carbonTableModel" (selectPage)="selectPage($event)"></ibm-pagination>
+
+</ibm-table-container>

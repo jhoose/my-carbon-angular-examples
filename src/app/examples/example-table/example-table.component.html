@@ -1,0 +1,101 @@
+<p>example-table works!</p>
+
+<!-- START jenna dummy data -->
+    <!-- jenna 
+        [defaultColSortByIndex]="0"
+[defaultSortDescending]="true"
+
+[defaultColSortByIndex]="defaultTableColumnSortByIndex"
+-->
+<div ibmRow>
+    <div ibmCol>
+
+        <app-carbon-table
+            [tableHeader]="exampleTableHeader"
+            [showPagination]="true"
+            [isLoading]="isTableLoading"
+            [numberOfColumns]="numberOfColumnsInExampleTable"
+            [carbonTableModel]="tableModel"
+            (refreshTableData)="getDummyData()"
+            [showExportButton]="true"
+            (exportData)="exportTable($event)"
+            [dateRange]="tableDateRange"
+            (onDateRangeChange)="dateRangeChange($event)"
+        >
+        </app-carbon-table>
+
+    </div> <!-- End ibmCol div -->
+</div> <!-- End ibmRow div -->
+<!-- END jenna dummy data -->
+
+<!-- START Angular Templates for special Carbon table cells -->
+<ng-template #idLinkTemplate let-data="data">
+    <a [routerLink]="['/things/thing', data]">
+        {{ data }}
+    </a>
+</ng-template>
+
+<ng-template #downloadFileTemplate let-data="data">
+    <button ibmButton="primary" [size]="'sm'" class="pdfButton" title="data.fileName" (click)="downloadFile(data)">
+        Download
+        <svg ibmIcon="download" size="20" class="bx--btn__icon"></svg>
+    </button>
+</ng-template>
+
+<ng-template #sortTableDateTemplate let-data="data">
+    <!-- sorts by data.date but shows data.display -->
+    {{ data.display }}
+</ng-template>
+
+<!-- Edit Table Row Button Template -->
+<ng-template #editRowButton let-data="data">
+    <button class="bx--btn bx--btn--ghost bx--btn--field" [title]="'Edit Item'" (click)="openModal(data.currentRow)">
+        Edit
+    </button>
+</ng-template>
+<!-- END Angular Templates for special Carbon table cells -->
+
+<!-- START Edit Table Modal -->
+<ibm-modal [open]="showEditRowModal" (overlaySelected)="closeModal()">
+    <ibm-modal-header (closeSelect)="closeModal()">
+      <h3 ibmModalHeaderHeading>{{ modalTitle }}</h3>
+    </ibm-modal-header>
+  
+    <section ibmModalContent hasForm="true" *ngIf="currentRow">
+        Logic for modal edit form here!
+        <br>
+        <br>
+
+        <div class="ibm-padding-bottom-1">
+
+            <ibm-dropdown
+                [label]="'Priority Level'"
+                placeholder=""
+                [helperText]="pastRowValues.priority !== '' ? '(was ' + pastRowValues.priority + ')' : ''"
+                [(ngModel)]="currentRow.priority"
+                (selected)="onModalDropDownChange()"
+                itemValueKey="content"
+                class="ibm-padding-bottom-1"
+            >
+                <ibm-dropdown-list [items]="priorityOptions"></ibm-dropdown-list>
+            </ibm-dropdown>
+
+        </div>
+
+        <div *ngIf="modalDebugging" class="ibm-padding-bottom-1">
+            Current Modal Values: {{ currentRow | json }}
+            <br><br>
+            Old Table Row Values: {{ pastRowValues | json }}
+        </div>
+    </section>
+
+    <ibm-modal-footer>
+        <button class="bx--btn bx--btn--secondary" (click)="closeModal()">
+        {{ cancelModal }}
+        </button>
+        <button class="bx--btn bx--btn--primary" modal-primary-focus [disabled]="isButtonDisabled" (click)="onModalSave()">
+        {{ saveModal }}
+        </button>
+    </ibm-modal-footer>
+
+</ibm-modal>

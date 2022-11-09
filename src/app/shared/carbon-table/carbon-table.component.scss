@@ -1,0 +1,25 @@
+.horizontal-table-scroll {
+    overflow-x: scroll;
+}
+
+.padding-top-none {
+    padding-top: 0px !important;
+}
+
+.left-right-align-table-header {
+    display: flex !important;
+    justify-content: space-between;
+}
+
+.inline-loading-container .bx--inline-loading {
+    justify-content: center;
+}
+
+::ng-deep .bx--loading--small {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+}
+
+::ng-deep .bx--inline-loading__text {
+    font-size: 1rem !important;
+}
